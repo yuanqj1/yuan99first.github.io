@@ -172,7 +172,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-15 22:29:41 / 修改时间：23:24:12" itemprop="dateCreated datePublished" datetime="2022-11-15T22:29:41+08:00">2022-11-15</time>
+              <time title="创建时间：2022-11-15 22:29:41 / 修改时间：23:28:42" itemprop="dateCreated datePublished" datetime="2022-11-15T22:29:41+08:00">2022-11-15</time>
             </span>
 
           
@@ -205,7 +205,7 @@
 <li><p>访问接口：用户访问系统的统一入口，通常有 cli 工具 、rest api等。</p>
 </li>
 </ul>
-<p><img src="/.com//sched2.png" alt="sched2"></p>
+<p><img src="/images/sched2.png" alt="sched2"></p>
 <h2 id="常见调度策略"><a href="#常见调度策略" class="headerlink" title="常见调度策略"></a>常见调度策略</h2><p>调度服务解决各种细节问题的实现方法称之为调度算法或调度策略。常见的各种调度算法：先到先服务、短作业优先、多因子优先级、抢占策略、高响应比、时间片轮转等。</p>
 <table>
 <thead>
@@ -331,12 +331,12 @@
 <p>如果分区中的任何作业不能被调度，则该分区中的任何低优先级作业都不会被调度。由于分区限制(例如，时间限制)或关闭&#x2F;耗尽节点而不能运行的作业是一个例外。在这种情况下，低优先级的作业可以被启动，而不会影响高优先级的作业。</p>
 <p>sched&#x2F;backfill：用于回填调度模块，以扩充默认的主调度。回填调度将启动低优先级作业，如果这样做不延迟任何高优先级作业的预期启动时间。回填调度的有效性取决于用户设定作业时限，否则所有作业的时限相同，无法回填。为了提高调度效率一般集群都会配置sched&#x2F;backfill</p>
 <h2 id="作业筛选流程"><a href="#作业筛选流程" class="headerlink" title="作业筛选流程"></a>作业筛选流程</h2><p>作业调度之前，调度系统会对所有主调度相关的参数进行解析，且将所有排队的作业按照优先级从高到低的顺序进行排序并构建作业队列，调度时作业会按照优先级从高到低的顺序出栈，出栈后的作业会经过调度参数和作业自身限制的筛选，最终进入调度作业节点选择启动环节如下图所示。</p>
-<p><img src="/.com//个人博客\MyBlog\source_posts\aaa\sched3.png" alt="sched3"></p>
+<p><img src="/images/sched3.png" alt="sched3"></p>
 <p>在调度参数限制相关的判断中，会对调度时间、本次调度启动的作业数量、本次调度的作业数量、每个分区调度的作业数量、调度系统最大rpc数量、hetjob作业等进行判断，其中分区到达设定数值之后会修改作业排队状态直接跳过当前作业的调度过程，调度时间、本次调度启动的作业数量、调度系统最大rpc数量和本次调度的作业数量到达限制之后会直接退出本次调度。</p>
 <p>除了调度参数限制相关的判断还有作业本身限制的判断，会对作业是否在其他分区运行，是否为hetjob作业（主调度不负责hetjob作业的调度），作业所在分区是否已经加入分区黑名单，作业的QOS是否满足，运行时间是否满足等进行判断，如果作业未通过筛选会直接跳过该作业的调度，继续调度下一个作业。</p>
 <p>经过以上筛选，作业符合现在启动的条件，作业会进入select_nodes函数为作业分配节点资源，如果分配成功则调用launch_job启动作业，如果空闲资源不能满足作业需求则跳过该作业调度下一个作业。</p>
 <h2 id="select-nodes节点选择流程"><a href="#select-nodes节点选择流程" class="headerlink" title="select_nodes节点选择流程"></a>select_nodes节点选择流程</h2><p>select_nodes函数主要负责将当前空闲资源与作业申请资源进行配，如果匹配成功则能满足作业运行要求，具体流程如下图</p>
-<p><img src="/.com//个人博客\MyBlog\source_posts\aaa\sched4.png" alt="sched4"></p>
+<p><img src="/images/sched4.png" alt="sched4"></p>
 <p>流程解析</p>
 <ol>
 <li><p>构建具有必要配置的节点表（node_set_ptr：包含slurm_node.conf中所有节点）；每个表格条目包括它们的权重、节点列表、特征等； </p>
@@ -370,7 +370,7 @@
 <li>调用allocate_nodes，执行实际分配节点；</li>
 </ol>
 <h2 id="分区黑名单流程"><a href="#分区黑名单流程" class="headerlink" title="分区黑名单流程"></a>分区黑名单流程</h2><p>主调度为了保证高优先级作业优先运行引入了分区黑名单的机制，其主干流程如下图</p>
-<p><img src="/.com//个人博客\MyBlog\source_posts\aaa\sched5.png" alt="sched5"></p>
+<p><img src="/images/sched5.png" alt="sched5"></p>
 <p>流程解析</p>
 <ol>
 <li><p>主调度不能运行异构作业，如果是异构作业直接加入分区黑名单 </p>
@@ -434,7 +434,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>	_start_stage_in</span><br><span class="line"><span class="number">2.</span>	_reset_buf_state</span><br><span class="line"><span class="number">3.</span>	_reconfigure_slurm <span class="comment">//更新配置</span></span><br><span class="line"><span class="number">4.</span>	_slurmctld_background <span class="comment">//主循环</span></span><br><span class="line"><span class="number">5.</span>	_fed_mgr_job_allocate_sib</span><br><span class="line"><span class="number">6.</span>	_has_deadline</span><br><span class="line"><span class="number">7.</span>	_slurm_rpc_allocate_resources <span class="comment">//分配资源</span></span><br><span class="line"><span class="number">8.</span>	_slurm_rpc_node_registration  <span class="comment">//节点注册</span></span><br><span class="line"><span class="number">9.</span>	_slurm_rpc_reconfigure_controller <span class="comment">//更新配置</span></span><br><span class="line"><span class="number">10.</span>	_slurm_rpc_submit_batch_job <span class="comment">//sbatch提交作业</span></span><br><span class="line"><span class="number">11.</span>	_slurm_rpc_update_job <span class="comment">//update更新作业信息</span></span><br><span class="line"><span class="number">12.</span>	_slurm_rpc_update_node <span class="comment">//更新节点状态或信息</span></span><br><span class="line"><span class="number">13.</span>	_slurm_rpc_update_partition <span class="comment">//更新分区配置</span></span><br><span class="line"><span class="number">14.</span>	_slurm_rpc_resv_create  <span class="comment">//创建预留</span></span><br><span class="line"><span class="number">15.</span>	_slurm_rpc_resv_update <span class="comment">//更新预留</span></span><br><span class="line"><span class="number">16.</span>	_slurm_rpc_resv_delete <span class="comment">//删除预留</span></span><br><span class="line"><span class="number">17.</span>	_slurm_rpc_suspend <span class="comment">//挂起作业</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="主调度参数优化方案"><a href="#主调度参数优化方案" class="headerlink" title="主调度参数优化方案"></a>主调度参数优化方案</h1><p>主调度各个配置参数生效位置</p>
-<p><img src="/.com//个人博客\MyBlog\source_posts\aaa\sched6.png" alt="sched6"></p>
+<p><img src="/images/sched6.png" alt="sched6"></p>
 <p>各个参数在调度中不同的位置发挥不同的作业，但是相互之间有着间接的联系，在不场景下可以通过不同的参数对调度进行限制，参数优化方案如下</p>
 <ol>
 <li><p>根据集群规模用户数量分区复杂度能得到每个作业调度时间 </p>
@@ -450,7 +450,7 @@
 <li><p>根据每个作业调度时间以及预期作业启动数量能够对调度最小时间间隔和时间间隔进行设定，调度的频率和数量不是关键，关键是调度的质量和启动的作业数，调度间隔时间可以适当增大，根据预期启动作业数计算出做小间隔时间，比如一个小时预期启动2万个作业，每秒启动15个，每次调度2秒(3600&#x2F;(sched_min_interval+2))*30&#x3D;2000；sched_min_interval&#x3D;3.4</p>
 </li>
 </ol>
-<p><img src="/.com//个人博客\MyBlog\source_posts\aaa\sched7.png" alt="sched7"></p>
+<p><img src="/images/sched7.png" alt="sched7"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
 <li><p>主调度是slurm调度系统中的最主要调度策略，要保证集群的响应速度、吞吐量、调度速率和资源的高效利用。 </p>
 </li>
